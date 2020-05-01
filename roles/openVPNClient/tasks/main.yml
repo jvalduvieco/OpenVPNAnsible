@@ -1,6 +1,6 @@
 - name: "Generate client certificate key"
   become: yes
-  shell: source vars; ./build-key --batch {{client_name}}
+  shell: ./easyrsa build-client-full {{client_name}} nopass; 
   args: 
     chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
     executable: /bin/bash
@@ -40,13 +40,13 @@
   shell: "{{ item }}"
   with_items:
     - echo -e '<ca>' >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
-    - cat {{ ansible_env.HOME }}/openvpn-ca/keys/ca.crt >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
+    - cat {{ ansible_env.HOME }}/openvpn-ca/pki/ca.crt >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
     - echo -e '</ca>\n<cert>' >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
-    - cat {{ ansible_env.HOME }}/openvpn-ca/keys/{{client_name}}.crt >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
+    - cat {{ ansible_env.HOME }}/openvpn-ca/pki/issued/{{client_name}}.crt >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
     - echo -e '</cert>\n<key>' >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
-    - cat {{ ansible_env.HOME }}/openvpn-ca/keys/{{client_name}}.key >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
+    - cat {{ ansible_env.HOME }}/openvpn-ca/pki/private/{{client_name}}.key >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
     - echo -e '</key>\n<tls-auth>' >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
-    - cat {{ ansible_env.HOME }}/openvpn-ca/keys/ta.key >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
+    - cat {{ ansible_env.HOME }}/openvpn-ca/pki/private/ta.key >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
     - echo -e '</tls-auth>' >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
     - echo -e 'key-direction 1' >> {{ ansible_env.HOME }}/openvpn-ca/{{client_name}}/{{client_name}}.ovpn
   args:
